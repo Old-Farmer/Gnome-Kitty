@@ -1,0 +1,39 @@
+#!/usr/bin/bash
+
+# Check network proxy settings for gnome
+if [ $(gsettings get org.gnome.system.proxy mode) == "'manual'" ]; then
+    proxy_host=$(gsettings get org.gnome.system.proxy.http host)
+    proxy_port=$(gsettings get org.gnome.system.proxy.http port)
+    http_proxy="http://${proxy_host:1:-1}:$proxy_port/"
+    echo $http_proxy
+    
+    proxy_host=$(gsettings get org.gnome.system.proxy.https host)
+    proxy_port=$(gsettings get org.gnome.system.proxy.https port)
+    https_proxy="http://${proxy_host:1:-1}:$proxy_port/"
+
+    proxy_host=$(gsettings get org.gnome.system.proxy.ftp host)
+    proxy_port=$(gsettings get org.gnome.system.proxy.ftp port)
+    ftp_proxy="http://${proxy_host:1:-1}:$proxy_port/"
+
+    proxy_host=$(gsettings get org.gnome.system.proxy.socks host)
+    proxy_port=$(gsettings get org.gnome.system.proxy.socks port)
+    all_proxy="socks://${proxy_host:1:-1}:$proxy_port/"
+
+    no_proxy=$(gsettings get org.gnome.system.proxy ignore-hosts | tr -d "[]' ")
+
+    kitty \
+        -o env=http_proxy=$http_proxy \
+        -o env=HTTP_PROXY=$http_proxy \
+        -o env=https_proxy=$https_proxy \
+        -o env=HTTPS_PROXY=$https_proxy \
+        -o env=ftp_proxy=$ftp_proxy \
+        -o env=FTP_PROXY=$ftp_proxy \
+        -o env=all_proxy=$all_proxy \
+        -o env=ALL_PROXY=$all_proxy \
+        -o env=no_proxy=$no_proxy \
+        -o env=NO_PROXY=$no_proxy \
+        "$@"
+else
+    kitty "$@"  
+fi
+
