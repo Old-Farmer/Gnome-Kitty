@@ -5,7 +5,6 @@ if [ $(gsettings get org.gnome.system.proxy mode) == "'manual'" ]; then
     proxy_host=$(gsettings get org.gnome.system.proxy.http host)
     proxy_port=$(gsettings get org.gnome.system.proxy.http port)
     http_proxy="http://${proxy_host:1:-1}:$proxy_port/"
-    echo $http_proxy
     
     proxy_host=$(gsettings get org.gnome.system.proxy.https host)
     proxy_port=$(gsettings get org.gnome.system.proxy.https port)
