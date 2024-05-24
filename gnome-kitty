@@ -1,6 +1,7 @@
 #!/usr/bin/bash
 
 # Check network proxy settings for gnome
+# Make kitty support fcitx5
 if [ $(gsettings get org.gnome.system.proxy mode) == "'manual'" ]; then
     proxy_host=$(gsettings get org.gnome.system.proxy.http host)
     proxy_port=$(gsettings get org.gnome.system.proxy.http port)
@@ -20,7 +21,7 @@ if [ $(gsettings get org.gnome.system.proxy mode) == "'manual'" ]; then
 
     no_proxy=$(gsettings get org.gnome.system.proxy ignore-hosts | tr -d "[]' ")
 
-    kitty \
+    GLFW_IM_MODULE=ibus kitty \
         -o env=http_proxy=$http_proxy \
         -o env=HTTP_PROXY=$http_proxy \
         -o env=https_proxy=$https_proxy \
@@ -33,6 +34,5 @@ if [ $(gsettings get org.gnome.system.proxy mode) == "'manual'" ]; then
         -o env=NO_PROXY=$no_proxy \
         "$@"
 else
-    kitty "$@"  
+    GLFW_IM_MODULE=ibus kitty "$@"
 fi
-
